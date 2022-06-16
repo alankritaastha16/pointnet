@@ -7,6 +7,7 @@ parser.add_argument('--class_choice', type=str, default='', help='class choice')
 parser.add_argument('--npoints', default=2500, type=int)
 parser.add_argument('--datadir', default='/data')
 parser.add_argument('--cache', action='store_true')
+parser.add_argument('--topview', action='store_true')
 args = parser.parse_args()
 
 from torchinfo import summary
@@ -59,7 +60,11 @@ for P, Y in tqdm(ts):
         P=P.detach().view(P.shape[1],-1) 
         #print(P.shape)
         P=P.cpu().numpy()  
-        #print(P[0])
-        pn.plot.plot3d(P, c=color)
+        #print(P[0])'''
+        f = pn.plot.plot_topview if args.topview else pn.plot.plot3d
+        c = color
+        ax = f(P, c)
+        pn.plot.zoomin(ax, P)
+        ax.set_title(f'class={Y}')
         pn.plot.show()
 
